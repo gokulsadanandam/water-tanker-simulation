@@ -33,6 +33,10 @@ export default function WaterTankInputs() {
         type: "waterTanker/updateScreen",
         payload: { screen : Screen.SIMULATOR_SCREEN  },
     });
+    dispatch({
+      type: "waterTanker/createTank",
+      payload: { rows, columns, blocks  },
+  });
   }
 
   const canUserNavigate = (rows >= 0 && columns >= 0 && blocks <= rows * columns) ? false : true;

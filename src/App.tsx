@@ -13,6 +13,10 @@ import { deepCopy } from './utils/utils';
 function App() {
   const { state, dispatch } = useStoreContext();
 
+  console.log(state);
+
+  const { blocks , rows , columns } = state.WaterTankerInputs;
+
   const fillTank = {
     initialState: state.WaterTank,
     fill: function () {
@@ -31,8 +35,8 @@ function App() {
         },
       };
 
-      const rows = 6;
-      const columns = 5;
+      const rows = state.WaterTankerInputs.rows;
+      const columns = state.WaterTankerInputs.columns;
 
       let arr = deepCopy(this.initialState);
       let currentPosition = { positionX: 0, positionY: 0 };
@@ -116,10 +120,7 @@ function App() {
         timer = timer + 1000;
       }
       return arr;
-    },
-    getInitialTankState: function () {
-      return this.initialState;
-    },
+    }
   };
 
   function fillTheTank() {
@@ -127,23 +128,15 @@ function App() {
   }
 
   function resetTank() {
-    for (let i = 0; i < GridArray.length; i++) {
-      for (let j = 0; j < GridArray[i].length; j++) {
-        GridArray[i][j] = {
-          ...GridArray[i][j],
-          isBlocked: false,
-          isWaterFlowed: false,
-        };
-      }
-    }
-    dispatch({ type : 'watertanker/updateGridArray' , payload: [...GridArray] }) 
+    dispatch({ type : 'waterTanker/createTank' , payload: { rows , columns } }) 
   }
 
   return (
-    <Box display="flex" mt={3} p={2} justifyContent="center">
+    <Grid container justifyContent="center">
         {/* <DropContainer/> */}
         <Grid
           container
+          lg={8}
           alignItems="center"
           justifyContent="center"
         >
@@ -173,22 +166,11 @@ function App() {
             </Grid>
           ))}
         </Grid>
-        <Grid container alignItems="center" justifyContent="center" style={{ paddingTop : 8 }}>
+        <Grid 
+          lg={4}
+        container alignItems="flex-start" justifyContent="center" style={{ paddingTop : 8 }}>
           <Grid container item alignItems="center" justifyContent="center">
-            <Button variant="contained" color="primary" onClick={fillTheTank}>
-              Traverse Node
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={resetTank}
-              style={{ marginLeft: 8 }}
-            >
-              Reset State
-            </Button>
-          </Grid>
-          <Grid container item alignItems="center" justifyContent="center">
-            {new Array(5).fill(null).map((_) => (
+            {new Array(blocks).fill(null).map((_) => (
               <DraggableGrid>
                 <Box
                   m={1}
@@ -202,8 +184,21 @@ function App() {
               </DraggableGrid>
             ))}
           </Grid>
+          <Grid container item style={{ marginTop: 24 }} alignItems="center" justifyContent="center">
+            <Button variant="contained" color="primary" onClick={fillTheTank}>
+              Start Simulation
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={resetTank}
+              style={{ marginLeft: 8 }}
+            >
+              Reset State
+            </Button>
+          </Grid>
         </Grid>
-      </Box>
+      </Grid>
   );
 }
 

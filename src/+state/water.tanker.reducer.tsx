@@ -24,7 +24,7 @@ export interface WaterTankerState {
 
 export const initialState: WaterTankerState = {
   screen: Screen.INPUT_SCREEN,
-  WaterTank: GridArray,
+  WaterTank: [] as WaterTank,
   WaterTankerInputs: {
     rows: 5,
     columns: 5,
@@ -49,6 +49,25 @@ export function reducer(
           [action.payload.key] : action.payload.value  
         }
       }
+    case "waterTanker/createTank":
+      let WaterTank = []
+      for (let i = 0; i < action.payload.rows; i++) {
+        let column = []
+        for (let j = 0; j < action.payload.columns; j++) {
+          column.push({
+            positionX: i,
+            positionY: j,
+            isBlocked: false,
+            isWaterFlowed: false,
+            isEdge: j==action.payload.columns,
+          })
+        }
+        WaterTank.push(column);
+      }
+      return {
+        ...state,
+        WaterTank
+      }
     case "waterTanker/updateScreen":
       return {
         ...state,
@@ -58,7 +77,6 @@ export function reducer(
       if (
         !action.payload.isBlocked
       ) {
-          console.log("inside block")
           return{
             ...state,
             WaterTank : Object.assign([...state.WaterTank],{
@@ -66,7 +84,11 @@ export function reducer(
                 [action.payload.positionY] : { positionX : action.payload.positionX, positionY: action.payload.positionY, 
                   isEdge: action.payload.isEdge , isWaterFlowed: action.payload.isWaterFlowed , isBlocked: true }
               })
-            })
+            }),
+            WaterTankerInputs : {
+              ...state.WaterTankerInputs,
+              blocks : state.WaterTankerInputs.blocks - 1
+            }
           }
       }
       return state;

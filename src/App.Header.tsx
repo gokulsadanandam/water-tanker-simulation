@@ -14,7 +14,7 @@ export default function AppHeader() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar  position="sticky">
       <Toolbar>
         {state.screen === Screen.SIMULATOR_SCREEN ? (
           <IconButton
