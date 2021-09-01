@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, IconButton, Typography } from "@material-ui/core";
-import { Menu, ArrowBack } from "@material-ui/icons";
+import { Menu, HomeRounded, ArrowBack } from "@material-ui/icons";
 import { useStoreContext } from "./+state/water.tankerprovider.context";
 import { Screen } from "./+state/water.tanker.reducer";
 
@@ -32,7 +32,7 @@ export default function AppHeader() {
             aria-label="menu"
             onClick={navigateToHome}
           >
-            <Menu />
+            <HomeRounded />
           </IconButton>
         )}
         <Typography variant="h6">Water Tank Simulation</Typography>
