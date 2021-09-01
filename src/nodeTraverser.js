@@ -84,7 +84,7 @@ const arr = [
     {
       positionX: 2,
       positionY: 1,
-      isBlocked: true,
+      isBlocked: false,
       isWaterFlowed: false,
       isEdge: false,
     },
@@ -250,142 +250,65 @@ function traverseNode(arr) {
   const rows = 6;
   const columns = 5;
   let currentPosition = { positionX: 0, positionY: 3 };
+  
+  // List to Hold Traversed Valid Nodes
   var traversedValidNodes = [];
-  var traversedValidNodesLeft = [];
-  var traversedValidNodesRight = [];
 
-  // Move towards Downward Direction - { positionX:0 , positionY:3 }
+  // Adding the current starting position to the list
+  traversedValidNodes.push(currentPosition)
 
-  currentPosition.positionX =
-    currentPosition.positionX + directions.down.positionX;
-  currentPosition.positionY =
-    currentPosition.positionY + directions.down.positionY;
+  while ( traversedValidNodes.length > 0 ) {
+    // { positionX:0 , positionY:3 }
 
-  while (
-    currentPosition.positionX >= 0 &&
-    currentPosition.positionX < rows &&
-    currentPosition.positionY >= 0 &&
-    currentPosition.positionY < columns
-  ) {
-    // { positionX:1 , positionY:3 }
-
+    var p = traversedValidNodes[0];
+    
+    // Removing currentNode entry from list. 
+    traversedValidNodes.shift();
+    
     // Get Array Node at Current Position -> arr[1][3]
+    var currentNode = arr[p.positionX][p.positionY];
 
-    var currentNode = arr[currentPosition.positionX][currentPosition.positionY];
+    arr[p.positionX][p.positionY].isWaterFlowed = true;
+    arr[p.positionX][p.positionY].isBlocked = true;
 
-    // If the Node is valid Push the Node to Traversed Node and Color the Node
+    console.log("Water Flowed Through",arr[p.positionX][p.positionY])
 
-    if (!currentNode.isBlocked) {
-      arr[currentPosition.positionX][
-        currentPosition.positionY
-      ].isWaterFlowed = true;
-      traversedValidNodes.push(currentNode);
-    } else {
-      // If the Node is blocked, traverse left and right simultaneously and find valid nodes
-      do {
-        currentPosition.positionX =
-          currentPosition.positionX + directions.left.positionX;
-        currentPosition.positionY =
-          currentPosition.positionY + directions.left.positionY;
-        // Get Array Node at Current Position -> arr[1][2] , arr[1][1] , arr[1][0]
-        // console.log(currentPosition.positionX,currentPosition.positionY)
-
-        if(currentPosition.positionY <= 0 ) {
-            break;
-        }
-
-        currentNode = arr[currentPosition.positionX][currentPosition.positionY];
-
-        if (!currentNode.isBlocked) {
-          arr[currentPosition.positionX][
-            currentPosition.positionY
-          ].isWaterFlowed = true;
-          traversedValidNodes.push(currentNode);
-        }
-        // Travese till edge of the container or when we encounter a valid node at the next row
-      } while (
-        currentPosition.positionY >= 0 &&
-        arr[currentPosition.positionX][currentPosition.positionY].isBlocked
-      );
+    if( p.positionX > rows ) {
+      break;
     }
 
-    if(currentPosition.positionY <= 0 ) {
-        break;
-    }
+    // Check the Downward Direction if Node is Valid
 
-    currentPosition.positionX =
-      currentPosition.positionX + directions.down.positionX;
-    currentPosition.positionY =
-      currentPosition.positionY + directions.down.positionY;
+    var a = p.positionX + directions.down.positionX;
+    var b = p.positionY + directions.down.positionY;
+
+    // a = 2 , b = 3;
+
+    if( a>=0 && a<rows && b>=0 && b<columns && !arr[a][b].isBlocked ) {
+      traversedValidNodes.push({ positionX : a , positionY : b });
+    }else{
+
+      // Check the Nodes to the Left are Valid
+
+      a = p.positionX + directions.left.positionX;
+      b = p.positionY + directions.left.positionY;
+
+      // a=1, b=2;
+
+      if( a>=0 && a<rows && b>=0 && b<columns && !arr[a][b].isBlocked ) {
+        traversedValidNodes.push({ positionX : a , positionY : b });
+      }
+
+      // Check the Node to the Right are Valid
+
+      a = p.positionX + directions.right.positionX;
+      b = p.positionY + directions.right.positionY;
+
+      if( a>=0 && a<rows && b>=0 && b<columns && !arr[a][b].isBlocked ) {
+        traversedValidNodes.push({ positionX : a , positionY : b });
+      }
+    }
   }
-
-  traversedValidNodesLeft = traversedValidNodes;
-
-  // Going to Initial Position
-
-  currentPosition = { positionX: 1, positionY: 3 };
-  traversedValidNodes = [];
-
-  while (
-    currentPosition.positionX >= 0 &&
-    currentPosition.positionX < rows &&
-    currentPosition.positionY >= 0 &&
-    currentPosition.positionY < columns
-  ) {
-    // { positionX:1 , positionY:3 }
-
-    // Get Array Node at Current Position -> arr[1][3]
-
-    var currentNode = arr[currentPosition.positionX][currentPosition.positionY];
-
-    // If the Node is valid Push the Node to Traversed Node and Color the Node
-
-    if (!currentNode.isBlocked) {
-      arr[currentPosition.positionX][
-        currentPosition.positionY
-      ].isWaterFlowed = true;
-      traversedValidNodes.push(currentNode);
-    } else {
-      do {
-        currentPosition.positionX =
-          currentPosition.positionX + directions.right.positionX;
-        currentPosition.positionY =
-          currentPosition.positionY + directions.right.positionY;
-
-        // Get Array Node at Current Position -> arr[1][2] , arr[1][1] , arr[1][0]
-        currentNode = arr[currentPosition.positionX][currentPosition.positionY];
-
-        if (!currentNode.isBlocked) {
-          arr[currentPosition.positionX][
-            currentPosition.positionY
-          ].isWaterFlowed = true;
-          traversedValidNodes.push(currentNode);
-        }
-        // Travese till edge of the container or when we encounter a valid node at the next row
-      } while (
-        currentPosition.positionY < columns &&
-        arr[currentPosition.positionX + 1][currentPosition.positionY].isBlocked
-      );
-    }
-
-    // Break if No Node on Right is Valid
-
-    if( currentPosition.positionY == (columns -1) ) {
-        break;
-    }
-
-    currentPosition.positionX =
-      currentPosition.positionX + directions.down.positionX;
-    currentPosition.positionY =
-      currentPosition.positionY + directions.down.positionY;
-  }
-  traversedValidNodesRight = traversedValidNodes;
-//   console.log("traversedValidNodesRight", [
-//     ...traversedValidNodesLeft,
-//     ...traversedValidNodesRight,
-//   ]);
-  console.log(arr)
-
 }
 
 traverseNode(arr);
