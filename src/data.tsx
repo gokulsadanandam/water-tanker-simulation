@@ -1,4 +1,4 @@
-export const GridArray = [
+export const GridArray: WaterTank = [
     [
       {
         positionX: 0,
@@ -222,4 +222,14 @@ export const GridArray = [
       },
     ],
   ];
+
+  export interface WaterTankItem {
+    positionX: number;
+    positionY: number;
+    isBlocked: boolean;
+    isWaterFlowed: boolean;
+    isEdge: boolean;
+  }
+
+  export type WaterTank = WaterTankItem[][]
   
