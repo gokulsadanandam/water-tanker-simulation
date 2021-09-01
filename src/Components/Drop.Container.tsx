@@ -21,7 +21,6 @@ export const DropContainer: FC<GridProps & WaterTankItem> = ({ children, positio
     }),
   }))
 
-  const isActive = canDrop && isOver
 
   return (
     <Grid ref={drop} role={'DropContainer'} {...rest} >

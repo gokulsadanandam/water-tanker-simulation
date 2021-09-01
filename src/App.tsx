@@ -1,15 +1,9 @@
-import React, {useReducer} from "react";
 import "./App.css";
 import {
   Box,
-  AppBar,
-  Toolbar,
-  IconButton,
   Grid,
-  Typography,
   Button,
 } from "@material-ui/core";
-import { Menu } from "@material-ui/icons";
 import { GridArray, WaterTankItem } from "./data";
 import { DropContainer } from "./Components/Drop.Container";
 import { DraggableGrid } from "./Components/Dragabble.Grid";
@@ -41,7 +35,7 @@ function App() {
       const columns = 5;
 
       let arr = deepCopy(this.initialState);
-      let currentPosition = { positionX: 0, positionY: 2 };
+      let currentPosition = { positionX: 0, positionY: 0 };
       let timer = 1000;
 
       // List to Hold Traversed Valid Nodes
@@ -129,7 +123,7 @@ function App() {
   };
 
   function fillTheTank() {
-    const filledTank = fillTank.fill();
+    fillTank.fill();
   }
 
   function resetTank() {
@@ -146,16 +140,7 @@ function App() {
   }
 
   return (
-    <Box>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <Menu />
-          </IconButton>
-          <Typography variant="h6">Water Tank Simulation</Typography>
-        </Toolbar>
-      </AppBar>
-      <Box display="flex" mt={3} p={2} justifyContent="center">
+    <Box display="flex" mt={3} p={2} justifyContent="center">
         {/* <DropContainer/> */}
         <Grid
           container
@@ -219,7 +204,6 @@ function App() {
           </Grid>
         </Grid>
       </Box>
-    </Box>
   );
 }
 

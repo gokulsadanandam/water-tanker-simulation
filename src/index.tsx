@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import AppHeader from './App.Header';
+import WaterTankInputs from './WaterTank.Inputs';
 import reportWebVitals from './reportWebVitals';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import StoreContext from './+state/water.tankerprovider.context'
-import { initialState , reducer } from './+state/water.tanker.reducer'
+import { initialState , reducer, Screen } from './+state/water.tanker.reducer'
 import { ProviderStateInterface } from './+state/water.tankerprovider.context';
+import { Box } from "@material-ui/core";
 
 const AppContainer = () => {
 
@@ -19,7 +22,11 @@ const AppContainer = () => {
   }
   return(
     <StoreContext.Provider value={providerState}>
-    <App/>
+      <Box>
+        <AppHeader/>
+        <Box mb={3} />
+        { state.screen === Screen.INPUT_SCREEN ? <WaterTankInputs/> : <App/> }
+      </Box>
     </StoreContext.Provider>
   )
 }

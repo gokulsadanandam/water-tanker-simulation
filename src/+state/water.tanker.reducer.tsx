@@ -1,19 +1,59 @@
 import { GridArray, WaterTank } from "../data";
 
+export enum Screen {
+  INPUT_SCREEN = 'inputScreen',
+  SIMULATOR_SCREEN = 'simulatorScreen',
+}
+
+export interface WaterTankerInputs {
+  rows: number;
+  columns: number;
+  blocks: number;
+  defaults?: {
+    maxRows?: number;
+    maxColumns?: number;
+    maxBlocks?: number; 
+  }
+}
+
 export interface WaterTankerState {
+  screen: Screen;
+  WaterTankerInputs: WaterTankerInputs,
   WaterTank: WaterTank;
 }
 
 export const initialState: WaterTankerState = {
+  screen: Screen.INPUT_SCREEN,
   WaterTank: GridArray,
+  WaterTankerInputs: {
+    rows: 5,
+    columns: 5,
+    blocks: 3,
+    defaults: {
+      maxRows: 20,
+      maxColumns: 20,
+    }
+  }
 };
 
 export function reducer(
   state: WaterTankerState,
   action: { type: string; payload?: any }
 ) {
-  console.log(action,state)
   switch (action.type) {
+    case "waterTankerScreen/updateInput":
+      return {
+        ...state,
+        WaterTankerInputs : {
+          ...state.WaterTankerInputs,
+          [action.payload.key] : action.payload.value  
+        }
+      }
+    case "waterTanker/updateScreen":
+      return {
+        ...state,
+        screen: action.payload.screen  
+      }
     case "watertanker/dropBlock":
       if (
         !action.payload.isBlocked
