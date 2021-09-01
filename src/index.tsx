@@ -5,11 +5,29 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import StoreContext from './+state/water.tankerprovider.context'
+import { initialState , reducer } from './+state/water.tanker.reducer'
+import { ProviderStateInterface } from './+state/water.tankerprovider.context';
+
+const AppContainer = () => {
+
+  const [state, dispatch] = React.useReducer(reducer, initialState);
+  
+  const providerState: ProviderStateInterface = {
+    state,
+    dispatch
+  }
+  return(
+    <StoreContext.Provider value={providerState}>
+    <App/>
+    </StoreContext.Provider>
+  )
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <DndProvider backend={HTML5Backend}>
-      <App />
+        <AppContainer />
     </DndProvider>
   </React.StrictMode>,
   document.getElementById('root')
@@ -18,4 +36,4 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();

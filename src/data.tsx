@@ -77,7 +77,7 @@ export const GridArray: WaterTank = [
       {
         positionX: 2,
         positionY: 0,
-        isBlocked: true,
+        isBlocked: false,
         isWaterFlowed: false,
         isEdge: true,
       },
@@ -91,7 +91,7 @@ export const GridArray: WaterTank = [
       {
         positionX: 2,
         positionY: 2,
-        isBlocked: true,
+        isBlocked: false,
         isWaterFlowed: false,
         isEdge: false,
       },
@@ -105,7 +105,7 @@ export const GridArray: WaterTank = [
       {
         positionX: 2,
         positionY: 4,
-        isBlocked: true,
+        isBlocked: false,
         isWaterFlowed: false,
         isEdge: true,
       },
@@ -128,7 +128,7 @@ export const GridArray: WaterTank = [
       {
         positionX: 3,
         positionY: 2,
-        isBlocked: true,
+        isBlocked: false,
         isWaterFlowed: false,
         isEdge: false,
       },

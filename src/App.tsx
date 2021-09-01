@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useReducer} from "react";
 import "./App.css";
 import {
   Box,
@@ -10,14 +10,13 @@ import {
   Button,
 } from "@material-ui/core";
 import { Menu } from "@material-ui/icons";
-import { GridArray } from "./data";
+import { GridArray, WaterTankItem } from "./data";
 import { DropContainer } from "./Components/Drop.Container";
 import { DraggableGrid } from "./Components/Dragabble.Grid";
-
-const intialState = [...GridArray];
+import {useStoreContext} from './+state/water.tankerprovider.context'
 
 function App() {
-  const [gridArray, updateGrids] = React.useState(intialState);
+  const { state, dispatch } = useStoreContext();
 
   const deepCopyObject = (obj: object) => {
     let tempObj: any = {};
@@ -52,7 +51,7 @@ function App() {
   };
 
   const fillTank = {
-    initialState: gridArray,
+    initialState: state.WaterTank,
     fill: function () {
       let directions = {
         left: {
@@ -94,12 +93,7 @@ function App() {
         arr[p.positionX][p.positionY].isBlocked = true;
 
         setTimeout(
-          () =>
-            updateGrids((prevState) => {
-              prevState[p.positionX][p.positionY].isWaterFlowed = true;
-              prevState[p.positionX][p.positionY].isBlocked = true;
-              return [...prevState];
-            }),
+          () => dispatch({ type : 'watertanker/updateGrids' , payload: { positionX : p.positionX , positionY : p.positionY } }) ,
           timer
         );
 
@@ -179,7 +173,7 @@ function App() {
         };
       }
     }
-    updateGrids((prevState) => [...GridArray]);
+    dispatch({ type : 'watertanker/updateGridArray' , payload: [...GridArray] }) 
   }
 
   return (
@@ -199,9 +193,9 @@ function App() {
           alignItems="center"
           justifyContent="center"
         >
-          {gridArray.map((gridRow, index) => (
-            <Grid item container key={`container-grid-${index}`}>
-              {gridRow.map((grid, gridIndex) => (
+          {state?.WaterTank.map((gridRow, index) => (
+            <Grid item container key={`container-grid-${index}`} justifyContent="center">
+              {gridRow.map( (grid : WaterTankItem, gridIndex: number) => (
                 <DropContainer
                   {...grid}
                   item
@@ -256,39 +250,6 @@ function App() {
           </Grid>
         </Grid>
       </Box>
-
-      {/* <Box display="inline-flex" alignItems="center" p={2} justifyContent="center"> 
-        <Grid
-          container
-          alignItems="center"
-          justifyContent="center"
-          style={{ marginTop: 24 , maxWidth: 400 }}
-        >
-          {gridArray.map((gridRow, index) => (
-            <Grid item container key={`container-grid-${index}`} >
-              {gridRow.map((grid, gridIndex) => (
-                <Grid item key={`container-grid-row-item-${index}-${gridIndex}`}>
-                  <Box
-                    m={1}
-                    p={1}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      backgroundColor: grid.isWaterFlowed
-                        ? "blue"
-                        : grid.isBlocked
-                        ? "black"
-                        : "#d2d2d2",
-                    }}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          ))}
-        </Grid>
-        <Button variant="contained" color="primary" onClick={fillTheTank} >Traverse Node</Button>
-        <Button variant="contained" color="secondary" onClick={resetTank} style={{ marginLeft: 8 }}>Reset State</Button>
-      </Box> */}
     </Box>
   );
 }
