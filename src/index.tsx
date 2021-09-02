@@ -11,6 +11,7 @@ import StoreContext from './+state/water.tankerprovider.context'
 import { initialState , reducer, Screen } from './+state/water.tanker.reducer'
 import { ProviderStateInterface } from './+state/water.tankerprovider.context';
 import { Box } from "@material-ui/core";
+import WaterTankerMessages from './Components/Notifications';
 
 const AppContainer = () => {
 
@@ -24,6 +25,7 @@ const AppContainer = () => {
     <StoreContext.Provider value={providerState}>
       <Box>
         <AppHeader/>
+        <WaterTankerMessages/>
         <Box mb={3} />
         { state.screen === Screen.INPUT_SCREEN ? <WaterTankInputs/> : <App/> }
       </Box>

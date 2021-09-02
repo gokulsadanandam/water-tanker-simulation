@@ -1,4 +1,4 @@
-import { GridArray, WaterTank } from "../data";
+import { WaterTank } from "../data";
 
 export enum Screen {
   INPUT_SCREEN = 'inputScreen',
@@ -16,10 +16,16 @@ export interface WaterTankerInputs {
   }
 }
 
+export interface Notification {
+  message?: string;
+  open: boolean
+}
+
 export interface WaterTankerState {
   screen: Screen;
   WaterTankerInputs: WaterTankerInputs,
   WaterTank: WaterTank;
+  Notification : Notification
 }
 
 export const initialState: WaterTankerState = {
@@ -33,6 +39,10 @@ export const initialState: WaterTankerState = {
       maxRows: 20,
       maxColumns: 20,
     }
+  },
+  Notification : {
+    message: undefined,
+    open: false
   }
 };
 
@@ -68,6 +78,15 @@ export function reducer(
         ...state,
         WaterTank
       }
+      case "waterTanker/goToHomeScreen":
+        return {
+          ...state,
+          WaterTankerInputs: {
+            ...state.WaterTankerInputs,
+            ...initialState.WaterTankerInputs
+          },
+          screen: action.payload.screen  
+        }
     case "waterTanker/updateScreen":
       return {
         ...state,
@@ -111,6 +130,22 @@ export function reducer(
         return { ...state, WaterTank : [...action.payload] };
     case "watertanker/fill":
       return state;
+    case "watertanker/notificationMessage":
+      return {
+        ...state,
+        Notification : {
+          message : action.payload,
+          open: true
+        }
+      };
+    case "watertanker/closeNotificationMessage":
+      return {
+        ...state,
+        Notification : {
+          ...state.Notification,
+          open: false
+        }
+      };
     default:
       throw new Error();
   }

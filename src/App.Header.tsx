@@ -8,7 +8,7 @@ export default function AppHeader() {
 
   const navigateToHome = () => {
     dispatch({
-      type: "waterTanker/updateScreen",
+      type: "waterTanker/goToHomeScreen",
       payload: { screen: Screen.INPUT_SCREEN },
     });
   };

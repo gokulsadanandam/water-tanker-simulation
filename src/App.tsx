@@ -4,7 +4,7 @@ import {
   Grid,
   Button,
 } from "@material-ui/core";
-import { GridArray, WaterTankItem } from "./data";
+import { topRow, WaterTankItem } from "./data";
 import { DropContainer } from "./Components/Drop.Container";
 import { DraggableGrid } from "./Components/Dragabble.Grid";
 import {useStoreContext} from './+state/water.tankerprovider.context'
@@ -133,72 +133,100 @@ function App() {
 
   return (
     <Grid container justifyContent="center">
-        {/* <DropContainer/> */}
+      {/* <DropContainer/> */}
+      <Grid container lg={8} alignItems="center" justifyContent="center">
         <Grid
+          item
           container
-          lg={8}
-          alignItems="center"
+          key={`container-grid-position-selector`}
           justifyContent="center"
         >
-          {state?.WaterTank.map((gridRow, index) => (
-            <Grid item container key={`container-grid-${index}`} justifyContent="center">
-              {gridRow.map( (grid : WaterTankItem, gridIndex: number) => (
-                <DropContainer
-                  {...grid}
-                  item
-                  key={`container-grid-row-item-${index}-${gridIndex}`}
-                >
-                  <Box
-                    m={1}
-                    p={1}
-                    style={{
-                      width: 40,
-                      height: 40,
-                      backgroundColor: grid.isWaterFlowed
-                        ? "blue"
-                        : grid.isBlocked
-                        ? "black"
-                        : "#d2d2d2",
-                    }}
-                  />
-                </DropContainer>
-              ))}
-            </Grid>
-          ))}
-        </Grid>
-        <Grid 
-          lg={4}
-        container alignItems="flex-start" justifyContent="center" style={{ paddingTop : 8 }}>
-          <Grid container item alignItems="center" justifyContent="center">
-            {new Array(blocks).fill(null).map((_) => (
-              <DraggableGrid>
+          <Box display="flex" >
+            {topRow.map((topRowGrid) => (
+              <DropContainer {...topRowGrid}>
                 <Box
                   m={1}
                   p={1}
-                  style={{
-                    width: 40,
-                    height: 40,
-                    backgroundColor: "black",
-                  }}
+                  borderRadius={4}
+                  bgcolor={"#ced4da"}
+                  className="blocks"
                 />
-              </DraggableGrid>
+              </DropContainer>
+            ))}
+          </Box>
+        </Grid>
+        {state?.WaterTank.map((gridRow, index) => (
+          <Grid
+            item
+            container
+            key={`container-grid-${index}`}
+            justifyContent="center"
+          >
+            {gridRow.map((grid: WaterTankItem, gridIndex: number) => (
+              <DropContainer
+                {...grid}
+                item
+                key={`container-grid-row-item-${index}-${gridIndex}`}
+              >
+                <Box
+                  m={1}
+                  p={1}
+                  borderRadius={4}
+                  className="blocks block-drop-container"
+                  bgcolor={
+                    grid.isWaterFlowed
+                      ? "#48cae4"
+                      : grid.isBlocked
+                      ? "#003049"
+                      : "#ced4da"
+                  }
+                />
+              </DropContainer>
             ))}
           </Grid>
-          <Grid container item style={{ marginTop: 24 }} alignItems="center" justifyContent="center">
-            <Button variant="contained" color="primary" onClick={fillTheTank}>
-              Start Simulation
-            </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={resetTank}
-              style={{ marginLeft: 8 }}
-            >
-              Reset State
-            </Button>
-          </Grid>
+        ))}
+      </Grid>
+      <Grid
+        lg={4}
+        container
+        alignItems="flex-start"
+        justifyContent="center"
+        style={{ paddingTop: 8 }}
+      >
+        <Grid container item alignItems="center" justifyContent="center">
+          {new Array(blocks).fill(null).map((_) => (
+            <DraggableGrid>
+              <Box
+                m={1}
+                p={1}
+                borderRadius={4}
+                bgcolor="#003049"
+                className="blocks"
+              />
+            </DraggableGrid>
+          ))}
+        </Grid>
+        <Grid
+          container
+          item
+          style={{ marginTop: 24 }}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Button variant="contained" color="primary" onClick={fillTheTank}>
+            Start Simulation
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={resetTank}
+            style={{ marginLeft: 8 }}
+          >
+            Reset State
+          </Button>
         </Grid>
       </Grid>
+    </Grid>
   );
 }
 
