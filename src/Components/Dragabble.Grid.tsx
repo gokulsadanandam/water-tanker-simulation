@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { useDrag } from 'react-dnd'
-import { Grid, GridProps, Theme } from '@material-ui/core';
+import { Grid, GridProps } from '@material-ui/core';
 import { ItemTypes } from './Dragabble.Items.Type';
 import { WaterTankItem } from '../data';
 import {useStoreContext} from '../+state/water.tankerprovider.context'

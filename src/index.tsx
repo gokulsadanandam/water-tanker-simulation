@@ -4,7 +4,6 @@ import './index.css';
 import App from './App';
 import AppHeader from './App.Header';
 import WaterTankInputs from './WaterTank.Inputs';
-import reportWebVitals from './reportWebVitals';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import StoreContext from './+state/water.tankerprovider.context'

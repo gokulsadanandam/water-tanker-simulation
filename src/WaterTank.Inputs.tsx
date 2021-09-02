@@ -1,7 +1,6 @@
 import React from "react";
 import Fab from "@material-ui/core/Fab";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
 import Grid from "@material-ui/core/Grid";
 import { useStoreContext } from "./+state/water.tankerprovider.context";

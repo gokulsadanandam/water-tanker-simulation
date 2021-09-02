@@ -4,8 +4,11 @@ import {
   Grid,
   Button,
   Typography,
+  Card,
+  CardContent,
+  CardHeader,
 } from "@material-ui/core";
-import { topRow, WaterTankItem } from "./data";
+import { WaterTankItem } from "./data";
 import { DropContainer } from "./Components/Drop.Container";
 import { DraggableGrid } from "./Components/Dragabble.Grid";
 import {useStoreContext} from './+state/water.tankerprovider.context'
@@ -74,9 +77,9 @@ function App() {
         let a: any = p.positionX + directions.down.positionX;
         let b: any = p.positionY + directions.down.positionY;
 
-        if(a===rows-1){
-          isEndReachedFlag =true
-        }
+        // if(a===rows-1){
+        //   isEndReachedFlag =true
+        // }
 
         // a = 2 , b = 3;
 
@@ -98,7 +101,7 @@ function App() {
 
           if (
             a >= 0 &&
-            a < rows &&
+            a < rows-1 &&
             b >= 0 &&
             b < columns &&
             !isEndReachedFlag &&
@@ -114,7 +117,7 @@ function App() {
 
           if (
             a >= 0 &&
-            a < rows &&
+            a < rows-1 &&
             b >= 0 &&
             b < columns &&
             !isEndReachedFlag &&
@@ -126,6 +129,14 @@ function App() {
 
         timer = timer + 1000;
       }
+
+      
+      setTimeout(
+        () => {
+          return dispatch({ type : 'watertanker/notificationMessage' , payload: "Simulation Ended. Reset State to Try Again." }) 
+        },timer
+      );
+
       return arr;
     }
   };
@@ -145,60 +156,68 @@ function App() {
   return (
     <Grid container justifyContent="center">
       <Grid container lg={8} alignItems="center" justifyContent="center">
-        { !originY.selected && <Typography color="secondary" gutterBottom variant="h5">
-          Please Select a Origin Position
-        </Typography>
-        }
+        {!originY.selected && (
+          <Typography color="secondary" gutterBottom variant="h5">
+            Please Select a Origin Position
+          </Typography>
+        )}
         <Grid
           item
           container
           key={`container-grid-position-selector`}
           justifyContent="center"
         >
-          <Box display="flex" >
+          <Box display="flex">
             {topGrid.map((topRowGrid) => (
-              <DropContainer {...topRowGrid} onClick={ _ => updateOriginAction(topRowGrid.positionY) } >
+              <DropContainer
+                {...topRowGrid}
+                onClick={(_) => updateOriginAction(topRowGrid.positionY)}
+              >
                 <Box
                   m={1}
                   p={1}
                   borderRadius={4}
-                  bgcolor={originY?.value === topRowGrid.positionY && "#e63946" || "#ced4da"}
+                  bgcolor={
+                    (originY?.value === topRowGrid.positionY && "#e63946") ||
+                    "#ced4da"
+                  }
                   className="blocks"
                 />
               </DropContainer>
             ))}
           </Box>
         </Grid>
-        { originY.selected && state?.WaterTank.map((gridRow, index) => (
-          <Grid
-            item
-            container
-            key={`container-grid-${index}`}
-            justifyContent="center"
-          >
-            {gridRow.map((grid: WaterTankItem, gridIndex: number) => (
-              <DropContainer
-                {...grid}
-                item
-                key={`container-grid-row-item-${index}-${gridIndex}`}
-              >
-                <Box
-                  m={1}
-                  p={1}
-                  borderRadius={4}
-                  className="blocks block-drop-container"
-                  bgcolor={
-                    grid.isWaterFlowed
-                      ? "#48cae4"
-                      : grid.isBlocked
-                      ? "#003049"
-                      : "#ced4da"
-                  }
-                />
-              </DropContainer>
-            ))}
-          </Grid>
-        ))}
+        {originY.selected &&
+          state?.WaterTank.map((gridRow, index) => (
+            <Grid
+              item
+              container
+              key={`container-grid-${index}`}
+              justifyContent="center"
+            >
+              {gridRow.map((grid: WaterTankItem, gridIndex: number) => (
+                <DropContainer
+                  {...grid}
+                  item
+                  key={`container-grid-row-item-${index}-${gridIndex}`}
+                >
+                  <Box
+                    m={1}
+                    p={1}
+                    borderRadius={4}
+                    className="blocks block-drop-container"
+                    bgcolor={
+                      grid.isWaterFlowed
+                        ? "#48cae4"
+                        : grid.isBlocked
+                        ? "#003049"
+                        : "#ced4da"
+                    }
+                  />
+                </DropContainer>
+              ))}
+            </Grid>
+          ))}
       </Grid>
       <Grid
         lg={4}
@@ -207,19 +226,6 @@ function App() {
         justifyContent="center"
         style={{ paddingTop: 8 }}
       >
-        <Grid container item alignItems="center" justifyContent="center">
-          {new Array(blocks).fill(null).map((_) => (
-            <DraggableGrid>
-              <Box
-                m={1}
-                p={1}
-                borderRadius={4}
-                bgcolor="#003049"
-                className="blocks"
-              />
-            </DraggableGrid>
-          ))}
-        </Grid>
         <Grid
           container
           item
@@ -227,17 +233,35 @@ function App() {
           alignItems="center"
           justifyContent="center"
         >
-          <Button variant="contained" color="primary" onClick={fillTheTank}>
-            Start Simulation
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={resetTank}
-            style={{ marginLeft: 8 }}
-          >
-            Reset State
-          </Button>
+          <Card>
+            <CardHeader className="controls-card-header" title="Controls & Blocks" titleTypographyProps={{ color : 'secondary' }} />
+            <CardContent>
+              <Box mb={3} display="flex" flexWrap="wrap">
+              {new Array(blocks).fill(null).map((_) => (
+                <DraggableGrid>
+                  <Box
+                    m={1}
+                    p={1}
+                    borderRadius={4}
+                    bgcolor="#003049"
+                    className="blocks"
+                  />
+                </DraggableGrid>
+              ))}
+              </Box>
+              <Button variant="contained" color="primary" onClick={fillTheTank}>
+                Start Simulation
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={resetTank}
+                style={{ marginLeft: 8 }}
+              >
+                Reset State
+              </Button>
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </Grid>

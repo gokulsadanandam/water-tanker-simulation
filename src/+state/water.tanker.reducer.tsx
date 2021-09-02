@@ -90,7 +90,7 @@ export function reducer(
         topGrid.push({
           positionX : 0,
           positionY: i,
-          isBlocked: false,
+          isBlocked: true,
           isWaterFlowed: false,
           isEdge: i===action.payload.columns || i===0
         })
