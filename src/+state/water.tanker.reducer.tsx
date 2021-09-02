@@ -13,7 +13,11 @@ export interface WaterTankerInputs {
     maxRows?: number;
     maxColumns?: number;
     maxBlocks?: number; 
-  }
+  },
+  originY: {
+    selected: boolean;
+    value?: number
+  };
 }
 
 export interface Notification {
@@ -38,6 +42,9 @@ export const initialState: WaterTankerState = {
     defaults: {
       maxRows: 20,
       maxColumns: 20,
+    },
+    originY: {
+      selected: false
     }
   },
   Notification : {
@@ -113,7 +120,7 @@ export function reducer(
       return state;
     case "watertanker/updateGrids":
       if (
-        action.payload.positionX && action.payload.positionX
+        action.payload.positionX >= 0 && action.payload.positionY >= 0
       ) {
         return{
           ...state,
@@ -146,6 +153,17 @@ export function reducer(
           open: false
         }
       };
+    case "waterTanker/updateOrigin":
+      return {
+        ...state,
+        WaterTankerInputs : {
+          ...state.WaterTankerInputs,
+          originY : {
+            selected: true,
+            value : action.payload as number
+          }
+        }
+      }
     default:
       throw new Error();
   }

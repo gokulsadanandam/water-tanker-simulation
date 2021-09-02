@@ -3,6 +3,7 @@ import {
   Box,
   Grid,
   Button,
+  Typography,
 } from "@material-ui/core";
 import { topRow, WaterTankItem } from "./data";
 import { DropContainer } from "./Components/Drop.Container";
@@ -13,9 +14,7 @@ import { deepCopy } from './utils/utils';
 function App() {
   const { state, dispatch } = useStoreContext();
 
-  console.log(state);
-
-  const { blocks , rows , columns } = state.WaterTankerInputs;
+  const { blocks , rows , columns , originY } = state.WaterTankerInputs;
 
   const fillTank = {
     initialState: state.WaterTank,
@@ -39,7 +38,7 @@ function App() {
       const columns = state.WaterTankerInputs.columns;
 
       let arr = deepCopy(this.initialState);
-      let currentPosition = { positionX: 0, positionY: 0 };
+      let currentPosition = { positionX: 0, positionY: state.WaterTankerInputs.originY.value };
       let timer = 1000;
 
       // List to Hold Traversed Valid Nodes
@@ -60,8 +59,10 @@ function App() {
         arr[p.positionX][p.positionY].isBlocked = true;
 
         setTimeout(
-          () => dispatch({ type : 'watertanker/updateGrids' , payload: { positionX : p.positionX , positionY : p.positionY } }) ,
-          timer
+          () => {
+            console.log(p)
+            return dispatch({ type : 'watertanker/updateGrids' , payload: { positionX : p.positionX , positionY : p.positionY } }) 
+          },timer
         );
 
         if (p.positionX > rows) {
@@ -131,10 +132,17 @@ function App() {
     dispatch({ type : 'waterTanker/createTank' , payload: { rows , columns } }) 
   }
 
+  function updateOriginAction(positionY: number){
+    dispatch({ type : 'waterTanker/updateOrigin' , payload: positionY }) 
+  }
+
   return (
     <Grid container justifyContent="center">
-      {/* <DropContainer/> */}
       <Grid container lg={8} alignItems="center" justifyContent="center">
+        { !originY.selected && <Typography color="secondary" gutterBottom variant="h5">
+          Please Select a Origin Position
+        </Typography>
+        }
         <Grid
           item
           container
@@ -143,19 +151,19 @@ function App() {
         >
           <Box display="flex" >
             {topRow.map((topRowGrid) => (
-              <DropContainer {...topRowGrid}>
+              <DropContainer {...topRowGrid} onClick={ _ => updateOriginAction(topRowGrid.positionY) } >
                 <Box
                   m={1}
                   p={1}
                   borderRadius={4}
-                  bgcolor={"#ced4da"}
+                  bgcolor={originY?.value == topRowGrid.positionY && "#e63946" || "#ced4da"}
                   className="blocks"
                 />
               </DropContainer>
             ))}
           </Box>
         </Grid>
-        {state?.WaterTank.map((gridRow, index) => (
+        { originY.selected && state?.WaterTank.map((gridRow, index) => (
           <Grid
             item
             container
