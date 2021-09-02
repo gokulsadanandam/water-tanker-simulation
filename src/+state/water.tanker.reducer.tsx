@@ -1,4 +1,4 @@
-import { WaterTank } from "../data";
+import { WaterTank, WaterTankItem } from "../data";
 
 export enum Screen {
   INPUT_SCREEN = 'inputScreen',
@@ -18,6 +18,7 @@ export interface WaterTankerInputs {
     selected: boolean;
     value?: number
   };
+  topGrid: WaterTankItem[]
 }
 
 export interface Notification {
@@ -45,7 +46,8 @@ export const initialState: WaterTankerState = {
     },
     originY: {
       selected: false
-    }
+    },
+    topGrid: []
   },
   Notification : {
     message: undefined,
@@ -76,14 +78,32 @@ export function reducer(
             positionY: j,
             isBlocked: false,
             isWaterFlowed: false,
-            isEdge: j===action.payload.columns,
+            isEdge: j===action.payload.columns || j===0,
           })
         }
         WaterTank.push(column);
       }
+
+      let topGrid = []
+
+      for ( let i=0; i < action.payload.columns ; i++ ){
+        topGrid.push({
+          positionX : 0,
+          positionY: i,
+          isBlocked: false,
+          isWaterFlowed: false,
+          isEdge: i===action.payload.columns || i===0
+        })
+      }
+
+
       return {
         ...state,
-        WaterTank
+        WaterTank,
+        WaterTankerInputs : {
+          ...state.WaterTankerInputs,
+          topGrid
+        }
       }
       case "waterTanker/goToHomeScreen":
         return {

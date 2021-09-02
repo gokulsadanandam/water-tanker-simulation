@@ -14,7 +14,7 @@ import { deepCopy } from './utils/utils';
 function App() {
   const { state, dispatch } = useStoreContext();
 
-  const { blocks , rows , columns , originY } = state.WaterTankerInputs;
+  const { blocks , rows , columns , originY, topGrid } = state.WaterTankerInputs;
 
   const fillTank = {
     initialState: state.WaterTank,
@@ -34,18 +34,19 @@ function App() {
         },
       };
 
-      const rows = state.WaterTankerInputs.rows;
-      const columns = state.WaterTankerInputs.columns;
-
       let arr = deepCopy(this.initialState);
-      let currentPosition = { positionX: 0, positionY: state.WaterTankerInputs.originY.value };
+      let currentPosition = { positionX: 0, positionY: state.WaterTankerInputs.originY.value as number };
       let timer = 1000;
+      let isEndReachedFlag = false;
 
       // List to Hold Traversed Valid Nodes
       let traversedValidNodes = [];
 
-      // Adding the current starting position to the list
-      traversedValidNodes.push(currentPosition);
+      // Check Current Position is Valid
+      if(!arr[currentPosition.positionX][currentPosition.positionY].isBlocked) {
+        // Adding the current starting position to the list
+        traversedValidNodes.push(currentPosition);
+      }
 
       while (traversedValidNodes.length > 0) {
         // { positionX:0 , positionY:3 }
@@ -60,7 +61,6 @@ function App() {
 
         setTimeout(
           () => {
-            console.log(p)
             return dispatch({ type : 'watertanker/updateGrids' , payload: { positionX : p.positionX , positionY : p.positionY } }) 
           },timer
         );
@@ -73,6 +73,10 @@ function App() {
 
         let a: any = p.positionX + directions.down.positionX;
         let b: any = p.positionY + directions.down.positionY;
+
+        if(a===rows-1){
+          isEndReachedFlag =true
+        }
 
         // a = 2 , b = 3;
 
@@ -97,6 +101,7 @@ function App() {
             a < rows &&
             b >= 0 &&
             b < columns &&
+            !isEndReachedFlag &&
             !arr[a][b].isBlocked
           ) {
             traversedValidNodes.push({ positionX: a, positionY: b });
@@ -112,6 +117,7 @@ function App() {
             a < rows &&
             b >= 0 &&
             b < columns &&
+            !isEndReachedFlag &&
             !arr[a][b].isBlocked
           ) {
             traversedValidNodes.push({ positionX: a, positionY: b });
@@ -150,7 +156,7 @@ function App() {
           justifyContent="center"
         >
           <Box display="flex" >
-            {topRow.map((topRowGrid) => (
+            {topGrid.map((topRowGrid) => (
               <DropContainer {...topRowGrid} onClick={ _ => updateOriginAction(topRowGrid.positionY) } >
                 <Box
                   m={1}
