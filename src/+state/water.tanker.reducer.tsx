@@ -76,7 +76,7 @@ export function reducer(
             positionY: j,
             isBlocked: false,
             isWaterFlowed: false,
-            isEdge: j==action.payload.columns,
+            isEdge: j===action.payload.columns,
           })
         }
         WaterTank.push(column);

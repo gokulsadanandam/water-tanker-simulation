@@ -156,7 +156,7 @@ function App() {
                   m={1}
                   p={1}
                   borderRadius={4}
-                  bgcolor={originY?.value == topRowGrid.positionY && "#e63946" || "#ced4da"}
+                  bgcolor={originY?.value === topRowGrid.positionY && "#e63946" || "#ced4da"}
                   className="blocks"
                 />
               </DropContainer>
