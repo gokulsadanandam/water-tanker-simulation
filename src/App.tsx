@@ -19,9 +19,7 @@ function App() {
 
   const { blocks , rows , columns , originY, topGrid } = state.WaterTankerInputs;
 
-  const fillTank = {
-    initialState: state.WaterTank,
-    fill: function () {
+  function fillTank() {
       let directions = {
         left: {
           positionX: 0,
@@ -37,7 +35,7 @@ function App() {
         },
       };
 
-      let arr = deepCopy(this.initialState);
+      let arr = state.WaterTank;
       let currentPosition = { positionX: 0, positionY: state.WaterTankerInputs.originY.value as number };
       let timer = 1000;
       let isEndReachedFlag = false;
@@ -54,13 +52,11 @@ function App() {
       while (traversedValidNodes.length > 0) {
         // { positionX:0 , positionY:3 }
 
-        let p = traversedValidNodes[0];
+        let p: any = traversedValidNodes[0];
 
         // Removing currentNode entry from list.
         traversedValidNodes.shift();
 
-        arr[p.positionX][p.positionY].isWaterFlowed = true;
-        arr[p.positionX][p.positionY].isBlocked = true;
 
         setTimeout(
           () => {
@@ -74,14 +70,9 @@ function App() {
 
         // Check the Downward Direction if Node is Valid
 
-        let a: any = p.positionX + directions.down.positionX;
-        let b: any = p.positionY + directions.down.positionY;
-
-        // if(a===rows-1){
-        //   isEndReachedFlag =true
-        // }
-
-        // a = 2 , b = 3;
+        let a = p.positionX + directions.down.positionX;
+        let b = p.positionY + directions.down.positionY;
+      
 
         if (
           a >= 0 &&
@@ -137,13 +128,8 @@ function App() {
         },timer
       );
 
-      return arr;
+      return;
     }
-  };
-
-  function fillTheTank() {
-    fillTank.fill();
-  }
 
   function resetTank() {
     dispatch({ type : 'waterTanker/createTank' , payload: { rows , columns } }) 
@@ -249,7 +235,7 @@ function App() {
                 </DraggableGrid>
               ))}
               </Box>
-              <Button variant="contained" color="primary" onClick={fillTheTank}>
+              <Button variant="contained" color="primary" onClick={fillTank}>
                 Start Simulation
               </Button>
               <Button
