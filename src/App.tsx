@@ -12,36 +12,40 @@ import { WaterTankItem } from "./data";
 import { DropContainer } from "./Components/Drop.Container";
 import { DraggableGrid } from "./Components/Dragabble.Grid";
 import {useStoreContext} from './+state/water.tankerprovider.context'
-import { deepCopy } from './utils/utils';
+
+interface Coordinates {
+  positionX: number;
+  positionY: number;
+}
 
 function App() {
   const { state, dispatch } = useStoreContext();
 
   const { blocks , rows , columns , originY, topGrid } = state.WaterTankerInputs;
 
+  const directions = {
+    left: {
+      positionX: 0,
+      positionY: -1,
+    },
+    right: {
+      positionX: 0,
+      positionY: 1,
+    },
+    down: {
+      positionX: 1,
+      positionY: 0,
+    }
+  };
+
   function fillTank() {
-      let directions = {
-        left: {
-          positionX: 0,
-          positionY: -1,
-        },
-        right: {
-          positionX: 0,
-          positionY: 1,
-        },
-        down: {
-          positionX: 1,
-          positionY: 0,
-        },
-      };
 
       let arr = state.WaterTank;
       let currentPosition = { positionX: 0, positionY: state.WaterTankerInputs.originY.value as number };
       let timer = 1000;
-      let isEndReachedFlag = false;
 
       // List to Hold Traversed Valid Nodes
-      let traversedValidNodes = [];
+      let traversedValidNodes: Coordinates[] = [];
 
       // Check Current Position is Valid
       if(!arr[currentPosition.positionX][currentPosition.positionY].isBlocked) {
@@ -52,7 +56,7 @@ function App() {
       while (traversedValidNodes.length > 0) {
         // { positionX:0 , positionY:3 }
 
-        let p: any = traversedValidNodes[0];
+        let p: Coordinates = traversedValidNodes[0];
 
         // Removing currentNode entry from list.
         traversedValidNodes.shift();
@@ -70,8 +74,8 @@ function App() {
 
         // Check the Downward Direction if Node is Valid
 
-        let a = p.positionX + directions.down.positionX;
-        let b = p.positionY + directions.down.positionY;
+        let a: number = p.positionX + directions.down.positionX;
+        let b: number = p.positionY + directions.down.positionY;
       
 
         if (
@@ -95,7 +99,6 @@ function App() {
             a < rows-1 &&
             b >= 0 &&
             b < columns &&
-            !isEndReachedFlag &&
             !arr[a][b].isBlocked
           ) {
             traversedValidNodes.push({ positionX: a, positionY: b });
@@ -111,7 +114,6 @@ function App() {
             a < rows-1 &&
             b >= 0 &&
             b < columns &&
-            !isEndReachedFlag &&
             !arr[a][b].isBlocked
           ) {
             traversedValidNodes.push({ positionX: a, positionY: b });
