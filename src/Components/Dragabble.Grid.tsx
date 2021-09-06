@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useDrag } from 'react-dnd'
 import { Grid, GridProps } from '@material-ui/core';
 import { ItemTypes } from './Dragabble.Items.Type';
-import { WaterTankItem } from '../data';
+import { WaterTankItem } from '../WaterTanker.Interfaces';
 import {useStoreContext} from '../+state/water.tankerprovider.context'
 import { withStyles } from '@material-ui/core/styles';
  

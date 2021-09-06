@@ -1,4 +1,4 @@
-import { WaterTank, WaterTankItem } from "../data";
+import { WaterTank, WaterTankItem } from "../WaterTanker.Interfaces";
 
 export enum Screen {
   INPUT_SCREEN = 'inputScreen',

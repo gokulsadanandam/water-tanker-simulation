@@ -1,4 +1,3 @@
-import "./App.css";
 import {
   Box,
   Grid,
@@ -8,7 +7,7 @@ import {
   CardContent,
   CardHeader,
 } from "@material-ui/core";
-import { WaterTankItem } from "./data";
+import { WaterTankItem } from "./WaterTanker.Interfaces";
 import { DropContainer } from "./Components/Drop.Container";
 import { DraggableGrid } from "./Components/Dragabble.Grid";
 import {useStoreContext} from './+state/water.tankerprovider.context'
@@ -143,7 +142,7 @@ function App() {
 
   return (
     <Grid container justifyContent="center">
-      <Grid container lg={8} alignItems="center" justifyContent="center">
+      <Grid container lg={8} alignItems="flex-start" justifyContent="center">
         {!originY.selected && (
           <Typography color="secondary" gutterBottom variant="h5">
             Please Select a Origin Position

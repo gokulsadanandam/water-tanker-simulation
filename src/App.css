@@ -1,3 +1,7 @@
+body {
+  margin : 0px!important;
+}
+
 .blocks{
   cursor: pointer;
   width: 40px;
